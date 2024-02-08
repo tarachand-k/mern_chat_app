@@ -4,16 +4,17 @@ import generateTokenAndSetCookie from "../utils/generateToken.js";
 
 export const signup = async (req, res) => {
   try {
-    const { fullName, username, password, gender } = req.body;
-    // if (password !== confirmPassword) {
-    //   return res.status(403).json({ error: "Passwords are not same." });
-    // }
+    const { fullName, username, password, confirmPassword, gender } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: "Passwords are not same." });
+    }
 
     // check username if it already exists
     const user = await User.findOne({ username });
 
     if (user) {
-      return res.status(403).json({ error: "username already exists." });
+      return res.status(400).json({ error: "username already exists." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -57,7 +58,7 @@ export const login = async (req, res) => {
     console.log("comparision has done");
 
     if (!user || !isPasswordCorrect) {
-      return res.status(403).json({ error: "Invalid username or password" });
+      return res.status(400).json({ error: "Invalid username or password" });
     }
 
     generateTokenAndSetCookie(user._id, res);

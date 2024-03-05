@@ -1,24 +1,32 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import useConversation from "../../zustand/useConversations";
+import { useAuthContext } from "../../contexts/AuthProvider";
 import Messages from "./Messages";
 import MessageInput from "./MessageInput";
 import { TiMessages } from "react-icons/ti";
-import useConversation from "../../zustand/useConversations";
-import { useAuthContext } from "../../contexts/AuthProvider";
+import { IoIosArrowBack } from "react-icons/io";
 
-const MessageContainer = () => {
+const MessageContainer = ({ isMobileScreen }) => {
   const { selectedConversation, setSelectedConversation } = useConversation();
 
   useEffect(() => {
-    return () => setSelectedConversation(null);
+    return () => (!isMobileScreen ? setSelectedConversation(null) : undefined);
   }, []);
 
   return (
-    <div className="md:min-w-[450px] flex flex-col">
+    <div className="flex-1 md:flex-none md:min-w-[450px] flex flex-col">
       {!selectedConversation ? (
         <NoChatSelected />
       ) : (
         <>
           <div className="bg-gray-700 px-4 py-2 mb-2 flex items-center gap-3">
+            {isMobileScreen && (
+              <IoIosArrowBack
+                fontSize={24}
+                className="-ml-2 -mr-1 text-gray-300"
+                onClick={() => setSelectedConversation(null)}
+              />
+            )}
             <div className="avatar online">
               <div className="w-8 rounded-full">
                 <img src={selectedConversation?.profilePic} alt="user avatar" />

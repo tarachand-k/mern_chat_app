@@ -1,6 +1,7 @@
 import React from "react";
 import useConversation from "../../zustand/useConversations";
 import { useSocketContext } from "../../contexts/SocketProvider";
+import { useNavigate } from "react-router-dom";
 
 const Conversation = ({ conversation, emoji, lastIdx }) => {
   const { selectedConversation, setSelectedConversation } = useConversation();
@@ -9,13 +10,18 @@ const Conversation = ({ conversation, emoji, lastIdx }) => {
 
   const isSelected = selectedConversation?._id === conversation._id;
 
+  const handleClick = () => {
+    setSelectedConversation(conversation);
+    console.log({ selectedConversation });
+  };
+
   return (
     <>
       <div
         className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer  ${
           isSelected ? "bg-sky-500" : ""
         }`}
-        onClick={() => setSelectedConversation(conversation)}
+        onClick={handleClick}
       >
         <div className={`avatar ${isOline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
